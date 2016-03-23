@@ -1,0 +1,28 @@
+.main-container {
+  max-width: 90em;
+}
+
+.head-search {
+  margin-bottom: 1.5rem;
+}
+
+.head-tags .tags {
+  display: inline;
+  margin-bottom: .5rem;
+  font-weight: 500;
+  line-height: 1.1;
+  font-size: 1.5rem;
+}
+
+.search-tags {
+  margin-bottom: 10px;
+}
+
+.head-search #matches {
+  font-weight: 700;
+  display: inline;
+}
+
+.tag-button {
+  display: block;
+}
