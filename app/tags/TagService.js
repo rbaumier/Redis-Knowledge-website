@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('Knowledge')
-  .factory('LinkService', ['Restangular', function(Restangular) {
+  .factory('TagService', ['Restangular', function(Restangular) {
     function findAll() {
-      return Restangular.all('links').getList();
+      return Restangular.all('tags').getList();
     }
 
     return {
