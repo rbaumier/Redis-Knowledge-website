@@ -6,7 +6,7 @@ angular.module('Knowledge')
       return Restangular.all('links').getList();
     }
 
-    function search(tags) {
+    function searchByTag(tags, options) {
       return Restangular.all('links').all('search').getList({
         tags: tags.join(',')
       });
@@ -14,6 +14,6 @@ angular.module('Knowledge')
 
     return {
       findAll: findAll,
-      search: search
+      searchByTag: searchByTag
     };
   }]);

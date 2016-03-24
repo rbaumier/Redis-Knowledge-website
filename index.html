@@ -18,7 +18,7 @@
       <div class="col-md-3 head-tags" ng-controller="TagController">
         <div class="search-tags">
           <h3>Tags</h3>
-          <input id="tags" autofocus/>
+          <input id="tags" autofocus ng-model="pattern" ng-keydown="findByPattern()" />
         </div>
         <div id="matches-tags">
           <button class="tag-button btn btn-default btn-xs" ng-click="findByTag(tag)" ng-repeat="tag in tags">{{tag.name}} ({{tag.count}})</button>
@@ -43,9 +43,7 @@
   <script src="bower_components/angular/angular.js" type="text/javascript"></script>
   <script src="bower_components/restangular/dist/restangular.js" type="text/javascript"></script>
   <script src="bower_components/angular-animate/angular-animate.js" type="text/javascript"></script>
-
   <script src="bower_components/lodash/lodash.js" type="text/javascript"></script>
-  <script src="bower_components/visibilityjs/lib/visibility.core.js" type="text/javascript"></script>
 
   <script src="app/app.js" type="text/javascript"></script>
   <script src="app/links/LinkController.js" type="text/javascript"></script>
