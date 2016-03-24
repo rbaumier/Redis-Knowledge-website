@@ -2,7 +2,7 @@
 
 angular.module('Knowledge')
   .factory('LinkService', ['Restangular', function(Restangular) {
-    function findAll() {
+    function findAllLinks() {
       return Restangular.all('links').getList();
     }
 
@@ -12,8 +12,20 @@ angular.module('Knowledge')
       });
     }
 
+    function findAllTags() {
+      return Restangular.all('tags').getList();
+    }
+
+    function searchByPattern(pattern) {
+      return Restangular.all('tags').all('search').getList({
+        pattern: pattern
+      });
+    }
+
     return {
-      findAll: findAll,
+      findAllLinks: findAllLinks,
+      findAllTags: findAllTags,
+      searchByPattern: searchByPattern,
       searchByTag: searchByTag
     };
   }]);
