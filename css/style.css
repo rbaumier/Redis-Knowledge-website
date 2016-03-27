@@ -27,3 +27,20 @@
   display: block;
   margin-bottom: 1px;
 }
+
+.links-header {
+  margin-bottom: 15px;
+}
+
+.links-header .ressources-title {
+  display: inline;
+}
+
+.links-header .add-ressource {
+  float: right;
+}
+
+.create-link .error-create {
+  color: #D44B47;
+  margin-bottom: 15px;
+}

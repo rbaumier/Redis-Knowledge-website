@@ -1,8 +1,8 @@
 /*globals io, Visibility, _ */
 'use strict';
 
-var app = angular.module('Knowledge', ['restangular']);
+var app = angular.module('Knowledge', ['restangular', 'ui.bootstrap']);
 
 app.config(function(RestangularProvider) {
-  RestangularProvider.setBaseUrl('http://localhost:3000');
+  RestangularProvider.setBaseUrl('http://localhost:9001');
 });

@@ -17,15 +17,20 @@ angular.module('Knowledge')
     }
 
     function searchByPattern(pattern) {
-      return Restangular.all('tags').all('search').getList({
+      return Restangular.all('links').all('search').getList({
         pattern: pattern
       });
+    }
+
+    function create(link) {
+      return Restangular.all('links').post(link);
     }
 
     return {
       findAllLinks: findAllLinks,
       findAllTags: findAllTags,
       searchByPattern: searchByPattern,
-      searchByTag: searchByTag
+      searchByTag: searchByTag,
+      create: create
     };
   }]);

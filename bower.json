@@ -1,11 +1,12 @@
 {
-  "name": "filesync",
-  "version": "2.0.0",
-  "homepage": "https://github.com/FGRibreau/filesync",
+  "name": "Redis-Knowledge",
+  "version": "1.0.0",
+  "homepage": "changeme",
   "authors": [
-    "FG Ribreau <github@fgribreau.com>"
+    "RBaumier",
+    "CelyaRousseau"
   ],
-  "description": "Unidirectional 1-N file syncing with history and local merging",
+  "description": "change me",
   "main": "public/app/app.js",
   "license": "MIT",
   "private": true,
@@ -19,8 +20,10 @@
   ],
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "angular": "~1.3.14",
     "lodash": "~3.4.0",
-    "restangular": "^1.5.2"
+    "angular": "^1.5.3",
+    "restangular": "^1.5.2",
+    "angular-bootstrap": "^1.2.5",
+    "angular-animate": "^1.5.3"
   }
 }
