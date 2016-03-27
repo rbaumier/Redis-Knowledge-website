@@ -2,8 +2,11 @@
 
 angular.module('Knowledge')
   .factory('LinkService', ['Restangular', function(Restangular) {
-    function findAllLinks() {
-      return Restangular.all('links').getList();
+    function findAllLinks(options) {
+      return Restangular.all('links').customGET('', {
+        offset: options.offset || 0,
+        limit: options.limit || 10
+      });
     }
 
     function searchByTag(tags, options) {

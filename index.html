@@ -72,6 +72,9 @@
               <a href="{{link.url}}" title="{{link.description}}">{{link.title}}</a></td>
             </li>
           </ul>
+          <uib-pagination total-items="linksCount" ng-model="currentPage" max-size="5" class="pagination-sm" boundary-link-numbers="true" ng-change="changePage()">
+          </uib-pagination>
+
       </div>
     </div>
 

@@ -3,9 +3,27 @@
 angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService',
   function($scope, LinkService) {
     $scope.formHidden = true;
+    $scope.linksCount = 0;
+    $scope.currentPage = 1;
 
-    LinkService.findAllLinks().then(links => {
-      $scope.links = links;
+    var linksByPage = 0;
+
+    $scope.setPage = function (pageNo) {
+      $scope.currentPage = pageNo;
+    };
+
+    $scope.changePage = function() {
+      LinkService.findAllLinks({
+        offset: $scope.currentPage * linksByPage
+      }).then(function(body) {
+        $scope.links = body.links;
+      });
+    };
+
+    LinkService.findAllLinks({}).then(function(body) {
+      $scope.links = body.links;
+      $scope.linksCount = body.count;
+      linksByPage = body.links.length;
     });
 
     $scope.findByTag = function(tag) {
