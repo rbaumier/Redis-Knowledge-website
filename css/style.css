@@ -14,6 +14,10 @@
   font-size: 1.5rem;
 }
 
+.search-mode {
+  margin-bottom: 5px;
+}
+
 .search-tags {
   margin-bottom: 10px;
 }

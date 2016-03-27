@@ -17,13 +17,22 @@
     <div class="row marketing" ng-controller="LinkController">
       <div class="col-md-3 head-tags">
         <div class="search-tags">
+          <div class="search-mode">
+            <h3>Search Mode</h3>
+            <label class="radio-inline"><input type="radio" name="optradio" ng-model="searchMode.type" value="autocomplete" ng-click="leaveIntersection()" checked="checked">Autocomplete</label>
+            <label class="radio-inline"><input type="radio" name="optradio" ng-model="searchMode.type" value="intersection">Intersection</label>
+          </div>
+          <div ng-repeat="tag in keepedTags" ng-show="searchMode.type == 'intersection'">
+            <button class="tag-button btn btn-primary btn-xs" ng-click="removeKeeped(tag)">{{tag.name}}</button>
+          </div>
           <h3>Tags</h3>
-          <input id="tags" autofocus ng-model="pattern" ng-keydown="findByPattern()" />
+          <input id="tags" autofocus ng-model="pattern" ng-keydown="search()" />
         </div>
         <div id="matches-tags">
           <button class="tag-button btn btn-default btn-xs" ng-click="findByTag(tag)" ng-repeat="tag in tags">{{tag.name}} ({{tag.count}})</button>
         </div>
       </div>
+
       <div class="col-md-9 links">
         <div class="links-header">
           <h3 class="ressources-title">Resources</h3>

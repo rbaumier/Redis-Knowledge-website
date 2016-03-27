@@ -11,7 +11,7 @@ angular.module('Knowledge')
 
     function searchByTag(tags, options) {
       return Restangular.all('links').all('search').getList({
-        tags: tags.join(',')
+        tags: tags
       });
     }
 
@@ -20,7 +20,7 @@ angular.module('Knowledge')
     }
 
     function searchByPattern(pattern) {
-      return Restangular.all('links').all('search').getList({
+      return Restangular.all('tags').all('search').getList({
         pattern: pattern
       });
     }
