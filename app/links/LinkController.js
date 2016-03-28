@@ -3,6 +3,7 @@
 angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService',
   function($scope, LinkService) {
     var linksByPage = 0;
+    var MAX_TAGS = 10;
     var searchModes = {
       intersection: 'intersection',
       autocomplete: 'autocomplete'
@@ -72,21 +73,19 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       });
     }
 
-    LinkService.findAllTags().then(tags => {
-      $scope.tags = tags.slice(0, 10);
+    LinkService.findTags().then(tags => {
+      $scope.tags = tags.slice(0, MAX_TAGS);
     });
 
     $scope.search = function(tag) {
       setTimeout(function() {
-        LinkService.searchByPattern($scope.pattern).then(tags => {
-          $scope.tags = tags;
+        LinkService.findTags({
+          pattern: $scope.pattern
+        }).then(tags => {
+          $scope.tags = tags.slice(0, MAX_TAGS);
           // only show links having ALL the selected tags
           if ($scope.searchMode.type === 'intersection') {
-            return LinkService.findLinks({
-              tags: tags
-            }).then(links => {
-              $scope.links = links;
-            });
+            return;
           }
 
           // show all links having the tag as a pattern (e.g. "red" works if the link has "redis" as tag)

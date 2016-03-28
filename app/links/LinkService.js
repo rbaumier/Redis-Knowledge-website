@@ -14,14 +14,8 @@ angular.module('Knowledge')
       return Restangular.all('links').customGET('', compact(options));
     }
 
-    function findAllTags() {
-      return Restangular.all('tags').getList();
-    }
-
-    function searchByPattern(pattern) {
-      return Restangular.all('tags').all('search').getList({
-        pattern: pattern
-      });
+    function findTags(options) {
+      return Restangular.all('tags').customGET('', compact(options || {}));
     }
 
     function create(link) {
@@ -30,8 +24,7 @@ angular.module('Knowledge')
 
     return {
       findLinks: findLinks,
-      findAllTags: findAllTags,
-      searchByPattern: searchByPattern,
+      findTags: findTags,
       create: create
     };
   }]);
