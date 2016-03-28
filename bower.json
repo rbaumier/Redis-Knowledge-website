@@ -20,10 +20,10 @@
   ],
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "lodash": "~3.4.0",
     "angular": "^1.5.3",
     "restangular": "^1.5.2",
     "angular-bootstrap": "^1.2.5",
-    "angular-animate": "^1.5.3"
+    "angular-animate": "^1.5.3",
+    "lodash": "^4.6.1"
   }
 }
