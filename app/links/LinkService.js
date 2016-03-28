@@ -9,7 +9,9 @@ angular.module('Knowledge')
     }
 
     function findLinks(options) {
-      return Restangular.all('links').customGET('', compact(options || {}));
+      options = options || {};
+      options.tags = (options.tags || []).join(',');
+      return Restangular.all('links').customGET('', compact(options));
     }
 
     function findAllTags() {
