@@ -4,7 +4,7 @@ angular.module('Knowledge')
   .factory('LinkService', ['Restangular', function(Restangular) {
     function compact(obj) {
       return _.omitBy(obj, function(v) {
-        return _.isArray(v) ? _.isEmpty(v) : v;
+        return _.isArray(v) ? _.isEmpty(v) : !v;
       });
     }
 
