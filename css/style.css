@@ -44,6 +44,10 @@
   float: right;
 }
 
+ul#links-list {
+  min-height: 200px;
+}
+
 .create-link .error-create {
   color: #D44B47;
   margin-bottom: 15px;
