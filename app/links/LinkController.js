@@ -42,6 +42,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       _.remove($scope.selectedTags, tag);
       $scope.tags.push(tag);
       LinkService.findLinks({
+        intersect: true,
         tags: $scope.selectedTags.map(function(tag) {
           return tag.name
         })
@@ -90,12 +91,11 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
 
           // show all links having the tag as a pattern (e.g. "red" works if the link has "redis" as tag)
           LinkService.findLinks({
-            tags: tags.map(function(tag) {
+            intersect: false,
+            tags: _.isEmpty($scope.pattern) ? '' : tags.map(function(tag) {
               return tag.name;
             })
-          }).then(links => {
-            $scope.links = links;
-          });
+          }).then(onLinksUpdate);
         });
       });
     }
