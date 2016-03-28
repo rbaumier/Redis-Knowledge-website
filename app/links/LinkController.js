@@ -3,58 +3,71 @@
 angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService',
   function($scope, LinkService) {
     var linksByPage = 0;
+    var searchModes = {
+      intersection: 'intersection',
+      autocomplete: 'autocomplete'
+    };
 
     $scope.formHidden = true;
     $scope.linksCount = 0;
     $scope.currentPage = 1;
-    $scope.keepedTags = [];
+    $scope.selectedTags = [];
     $scope.searchMode = {
       type: 'autocomplete'
     };
+
+    function onLinksUpdate(body) {
+      $scope.links = body.links;
+      $scope.linksCount = body.count;
+      linksByPage = body.links.length;
+      $scope.setPage(1);
+    }
 
     $scope.setPage = function(pageNo) {
       $scope.currentPage = pageNo;
     };
 
     $scope.changePage = function() {
-      LinkService.findAllLinks({
-        offset: $scope.currentPage * linksByPage
+      LinkService.findLinks({
+        offset: ($scope.currentPage - 1) * linksByPage
       }).then(function(body) {
         $scope.links = body.links;
       });
     };
 
-    LinkService.findAllLinks({}).then(function(body) {
-      $scope.links = body.links;
-      $scope.linksCount = body.count;
-      linksByPage = body.links.length;
-    });
+    LinkService.findLinks().then(onLinksUpdate);
 
-    $scope.removeKeeped = function(tag) {
-      _.remove($scope.keepedTags, tag);
+    $scope.removeSelected = function(tag) {
+      _.remove($scope.selectedTags, tag);
       $scope.tags.push(tag);
+      LinkService.findLinks({
+        tags: $scope.selectedTags.map(function(tag) {
+          return tag.name
+        })
+      }).then(onLinksUpdate);
     }
 
     $scope.leaveIntersection = function() {
-      $scope.tags = $scope.tags.concat($scope.keepedTags).sort(function(a,b) {
-        return a.count < b.count;
-      });
-      $scope.keepedTags = [];
+      $scope.tags = $scope.tags.concat($scope.selectedTags);
+      $scope.selectedTags = [];
     }
 
-    $scope.findByTag = function(tag) {
-      if ($scope.searchMode.type === 'intersection') {
-        $scope.keepedTags.push(tag);
+    $scope.selectTag = function(tag) {
+      if ($scope.searchMode.type === searchModes.intersection) {
+        $scope.selectedTags.push(tag);
         $scope.tags = _.filter($scope.tags, function(tag) {
-          return !_.find($scope.keepedTags, tag);
+          return !_.find($scope.selectedTags, tag);
         });
-        return;
-        // return LinkService.searchByTags(tags).then(links => {
-        //   $scope.links = links;
-        // });
+        return LinkService.findLinks({
+          tags: $scope.selectedTags.map(function(tag) {
+            return tag.name;
+          })
+        }).then(onLinksUpdate);
       }
 
-      LinkService.searchByTag([tag.name]).then(links => {
+      LinkService.findLinks({
+        tags: [tag.name]
+      }).then(function(links){
         $scope.links = links;
       });
     }
@@ -69,15 +82,19 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
           $scope.tags = tags;
           // only show links having ALL the selected tags
           if ($scope.searchMode.type === 'intersection') {
-            return LinkService.searchByTags(tags).then(links => {
+            return LinkService.findLinks({
+              tags: tags
+            }).then(links => {
               $scope.links = links;
             });
           }
 
           // show all links having the tag as a pattern (e.g. "red" works if the link has "redis" as tag)
-          LinkService.searchByTag(tags.map(function(tag) {
-            return tag.name;
-          })).then(links => {
+          LinkService.findLinks({
+            tags: tags.map(function(tag) {
+              return tag.name;
+            })
+          }).then(links => {
             $scope.links = links;
           });
         });

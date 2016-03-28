@@ -2,17 +2,14 @@
 
 angular.module('Knowledge')
   .factory('LinkService', ['Restangular', function(Restangular) {
-    function findAllLinks(options) {
-      return Restangular.all('links').customGET('', {
-        offset: options.offset || 0,
-        limit: options.limit || 10
+    function compact(obj) {
+      return _.omitBy(obj, function(v) {
+        return _.isArray(v) ? _.isEmpty(v) : v;
       });
     }
 
-    function searchByTag(tags, options) {
-      return Restangular.all('links').all('search').getList({
-        tags: tags
-      });
+    function findLinks(options) {
+      return Restangular.all('links').customGET('', compact(options || {}));
     }
 
     function findAllTags() {
@@ -30,10 +27,9 @@ angular.module('Knowledge')
     }
 
     return {
-      findAllLinks: findAllLinks,
+      findLinks: findLinks,
       findAllTags: findAllTags,
       searchByPattern: searchByPattern,
-      searchByTag: searchByTag,
       create: create
     };
   }]);
