@@ -71,9 +71,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
 
       LinkService.findLinks({
         filters: [tag.name]
-      }).then(function(links){
-        $scope.links = links;
-      });
+      }).then(onLinksUpdate);
     }
 
     LinkService.findTags().then(tags => {
