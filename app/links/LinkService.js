@@ -8,10 +8,18 @@ angular.module('Knowledge')
       });
     }
 
-    function findLinks(options) {
+    function formatLinksOptions(options) {
       options = options || {};
-      options.tags = (options.tags || []).join(',');
-      return Restangular.all('links').customGET('', compact(options));
+      options.filters = (options.filters || []).join(',');
+      return compact(options);
+    }
+
+    function findLinks(options) {
+      return Restangular.all('links').customGET('', formatLinksOptions(options));
+    }
+
+    function findLinksWithIntersect(options) {
+      return Restangular.all('links').customGET('intersect', formatLinksOptions(options));
     }
 
     function findTags(options) {
@@ -24,6 +32,7 @@ angular.module('Knowledge')
 
     return {
       findLinks: findLinks,
+      findLinksWithIntersect: findLinksWithIntersect,
       findTags: findTags,
       create: create
     };

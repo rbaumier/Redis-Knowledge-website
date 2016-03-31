@@ -1,4 +1,3 @@
-/*globals io, Visibility, _ */
 'use strict';
 
 var app = angular.module('Knowledge', ['restangular', 'ui.bootstrap']);

@@ -10,8 +10,10 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
     };
 
     $scope.formHidden = true;
+    // @todo: $scope.pagination.linksCount & $scope.pagination.currentPage
     $scope.linksCount = 0;
     $scope.currentPage = 1;
+
     $scope.selectedTags = [];
     $scope.searchMode = {
       type: 'autocomplete'
@@ -43,7 +45,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       $scope.tags.push(tag);
       LinkService.findLinks({
         intersect: true,
-        tags: $scope.selectedTags.map(function(tag) {
+        filters: $scope.selectedTags.map(function(tag) {
           return tag.name
         })
       }).then(onLinksUpdate);
@@ -60,15 +62,15 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
         $scope.tags = _.filter($scope.tags, function(tag) {
           return !_.find($scope.selectedTags, tag);
         });
-        return LinkService.findLinks({
-          tags: $scope.selectedTags.map(function(tag) {
+        return LinkService.findLinksWithIntersect({
+          filters: $scope.selectedTags.map(function(tag) {
             return tag.name;
           })
         }).then(onLinksUpdate);
       }
 
       LinkService.findLinks({
-        tags: [tag.name]
+        filters: [tag.name]
       }).then(function(links){
         $scope.links = links;
       });
@@ -88,11 +90,11 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
           if ($scope.searchMode.type === 'intersection') {
             return;
           }
-
+          // @todo: enable autocomplete if pattern is at least 2 characters?
           // show all links having the tag as a pattern (e.g. "red" works if the link has "redis" as tag)
           LinkService.findLinks({
             intersect: false,
-            tags: _.isEmpty($scope.pattern) ? '' : tags.map(function(tag) {
+            filters: _.isEmpty($scope.pattern) ? '' : tags.map(function(tag) {
               return tag.name;
             })
           }).then(onLinksUpdate);
