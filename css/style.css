@@ -40,8 +40,17 @@
   display: inline;
 }
 
-.links-header .add-ressource {
+.links-header .links-actions {
   float: right;
+}
+
+.links-header .links-actions #search-by-title {
+  width: 200px;
+  margin-left: 10px;
+}
+
+.links-header .add-ressource {
+  margin-left: 10px;
 }
 
 ul#links-list {

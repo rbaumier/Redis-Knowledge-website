@@ -37,6 +37,9 @@
         <div class="links-header">
           <h3 class="ressources-title">Resources</h3>
           <button type="button" class="btn btn-primary add-ressource" ng-hide="!formHidden" ng-click="clean()">Create</button>
+          <div class="links-actions">
+            <strong>Search by title</strong><input id="search-by-title" autofocus ng-model="title" ng-keydown="searchByTitle()" />
+          </div>
         </div>
         <div uib-collapse="formHidden">
           <div class="well well-lg create-link">

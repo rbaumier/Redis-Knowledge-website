@@ -100,6 +100,15 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       });
     }
 
+    // the api doesn't work (http://localhost:9001/links?q=shard)
+    $scope.searchByTitle = function() {
+      setTimeout(function() {
+        LinkService.findLinks({
+          q: $scope.title
+        }).then(onLinksUpdate);
+      });
+    }
+
     $scope.clean = function() {
       $scope.formHidden = false;
       $scope.link = {};
