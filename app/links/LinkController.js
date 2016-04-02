@@ -9,28 +9,33 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       autocomplete: 'autocomplete'
     };
 
-    $scope.formHidden = true;
+    $scope.createFormHidden = true;
     $scope.pagination = {
       linksCount: 0,
       currentPage: 1
     };
 
+    // the tags we want to do the intersection with
     $scope.selectedTags = [];
     $scope.searchMode = {
       type: 'autocomplete'
     };
 
+    // init the links and tags
     LinkService.findLinks().then(onLinksUpdate);
     LinkService.findTags().then(tags => {
       $scope.tags = tags.slice(0, MAX_TAGS);
     });
 
+    // [{name:'a'}, {name:'b'}] -> ['a', 'b']
     function getNames(xs) {
       return xs.map(function(x) {
         return x.name;
       })
     }
 
+    // body = [{count: Number, links: array[Link]}]
+    // refresh links and pagination when we receive new links
     function onLinksUpdate(body) {
       $scope.links = body.links;
       $scope.pagination.linksCount = body.count;
@@ -38,10 +43,22 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       $scope.setPage(1);
     }
 
+    function onIntersectionUpdate(tag) {
+      $scope.selectedTags.push(tag);
+      $scope.tags = _.filter($scope.tags, function(tag) {
+        return !_.find($scope.selectedTags, tag);
+      });
+      return LinkService.findLinksWithIntersect({
+        filters: getNames($scope.selectedTags)
+      }).then(onLinksUpdate);
+    }
+
+    // update the current page
     $scope.setPage = function(page) {
       $scope.pagination.currentPage = page;
     };
 
+    // when the user click on a page number: refresh the links
     $scope.changePage = function() {
       LinkService.findLinks({
         offset: ($scope.pagination.currentPage - 1) * linksByPage
@@ -50,7 +67,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       });
     };
 
-
+    // when the user remove a tag he did an intersection with
     $scope.removeSelected = function(tag) {
       _.remove($scope.selectedTags, tag);
       $scope.tags.push(tag);
@@ -59,27 +76,23 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       }).then(onLinksUpdate);
     }
 
+    // when the 'intersection' option isn't selected anymore
     $scope.leaveIntersection = function() {
       $scope.tags = $scope.tags.concat($scope.selectedTags);
       $scope.selectedTags = [];
     }
 
+    // when the user select a tag
     $scope.selectTag = function(tag) {
       if ($scope.searchMode.type === searchModes.intersection) {
-        $scope.selectedTags.push(tag);
-        $scope.tags = _.filter($scope.tags, function(tag) {
-          return !_.find($scope.selectedTags, tag);
-        });
-        return LinkService.findLinksWithIntersect({
-          filters: getNames($scope.selectedTags)
-        }).then(onLinksUpdate);
+        return updateIntersection(tag);
       }
-
       LinkService.findLinks({
         filters: [tag.name]
       }).then(onLinksUpdate);
     }
 
+    // when the user enter a pattern into the tags input
     $scope.search = function(tag) {
       setTimeout(function() {
         LinkService.findTags({
@@ -107,12 +120,14 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       });
     }
 
+    // when the user closes the create form: reset fields
     $scope.clean = function() {
-      $scope.formHidden = false;
+      $scope.createFormHidden = false;
       $scope.link = {};
       $scope.errorCreate = '';
     }
 
+    // handle a link creation
     $scope.create = function(link) {
       if (!link || !link.title) {
         return $scope.errorCreate = 'You need to provide a title';
@@ -130,7 +145,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
           tags: link.tags.split(' ')
         }))
         .then(function() {
-          $scope.formHidden = true;
+          $scope.createFormHidden = true;
         })
         .catch(function(err) {
           $scope.errorCreate = err;

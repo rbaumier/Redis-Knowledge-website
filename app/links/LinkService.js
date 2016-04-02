@@ -9,13 +9,12 @@ angular.module('Knowledge')
     }
 
     function formatLinksOptions(options) {
-      options = options || {};
       options.filters = (options.filters || []).join(',');
       return compact(options);
     }
 
     function findLinks(options) {
-      return Restangular.all('links').customGET('', formatLinksOptions(options));
+      return Restangular.all('links').customGET('', formatLinksOptions(options || {}));
     }
 
     function findLinksWithIntersect(options) {

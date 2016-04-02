@@ -36,12 +36,12 @@
       <div class="col-md-9 links">
         <div class="links-header">
           <h3 class="ressources-title">Resources</h3>
-          <button type="button" class="btn btn-primary add-ressource" ng-hide="!formHidden" ng-click="clean()">Create</button>
+          <button type="button" class="btn btn-primary add-ressource" ng-hide="!createFormHidden" ng-click="clean()">Create</button>
           <div class="links-actions">
             <strong>Search by title</strong><input id="search-by-title" autofocus ng-model="title" ng-keydown="searchByTitle()" />
           </div>
         </div>
-        <div uib-collapse="formHidden">
+        <div uib-collapse="createFormHidden">
           <div class="well well-lg create-link">
             <form class="form-horizontal">
               <div class="form-group">
@@ -71,8 +71,8 @@
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <div class="error-create">{{errorCreate}}</div>
-                  <button class="btn btn-default" ng-click="create(link)">Create</button>
-                  <button class="btn btn-danger" ng-click="formHidden = true">Cancel</button>
+                  <button class="btn btn-primary" ng-click="create(link)">Create</button>
+                  <button class="btn btn-default" ng-click="createFormHidden = true">Cancel</button>
                 </div>
               </div>
             </form>
