@@ -19,7 +19,8 @@ angular.module('Knowledge')
     }
 
     function findLinksWithIntersect(options) {
-      return Restangular.all('links').customGET('intersect', formatLinksOptions(options));
+      options.intersect = true;
+      return findLinks(options);
     }
 
     function findTags(options) {
