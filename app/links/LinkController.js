@@ -10,44 +10,52 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
     };
 
     $scope.formHidden = true;
-    // @todo: $scope.pagination.linksCount & $scope.pagination.currentPage
-    $scope.linksCount = 0;
-    $scope.currentPage = 1;
+    $scope.pagination = {
+      linksCount: 0,
+      currentPage: 1
+    };
 
     $scope.selectedTags = [];
     $scope.searchMode = {
       type: 'autocomplete'
     };
 
+    LinkService.findLinks().then(onLinksUpdate);
+    LinkService.findTags().then(tags => {
+      $scope.tags = tags.slice(0, MAX_TAGS);
+    });
+
+    function getNames(xs) {
+      return xs.map(function(x) {
+        return x.name;
+      })
+    }
+
     function onLinksUpdate(body) {
       $scope.links = body.links;
-      $scope.linksCount = body.count;
+      $scope.pagination.linksCount = body.count;
       linksByPage = body.links.length;
       $scope.setPage(1);
     }
 
-    $scope.setPage = function(pageNo) {
-      $scope.currentPage = pageNo;
+    $scope.setPage = function(page) {
+      $scope.pagination.currentPage = page;
     };
 
     $scope.changePage = function() {
       LinkService.findLinks({
-        offset: ($scope.currentPage - 1) * linksByPage
+        offset: ($scope.pagination.currentPage - 1) * linksByPage
       }).then(function(body) {
         $scope.links = body.links;
       });
     };
 
-    LinkService.findLinks().then(onLinksUpdate);
 
     $scope.removeSelected = function(tag) {
       _.remove($scope.selectedTags, tag);
       $scope.tags.push(tag);
-      LinkService.findLinks({
-        intersect: true,
-        filters: $scope.selectedTags.map(function(tag) {
-          return tag.name
-        })
+      LinkService.findLinksWithIntersect({
+        filters: getNames($scope.selectedTags)
       }).then(onLinksUpdate);
     }
 
@@ -63,9 +71,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
           return !_.find($scope.selectedTags, tag);
         });
         return LinkService.findLinksWithIntersect({
-          filters: $scope.selectedTags.map(function(tag) {
-            return tag.name;
-          })
+          filters: getNames($scope.selectedTags)
         }).then(onLinksUpdate);
       }
 
@@ -74,10 +80,6 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       }).then(onLinksUpdate);
     }
 
-    LinkService.findTags().then(tags => {
-      $scope.tags = tags.slice(0, MAX_TAGS);
-    });
-
     $scope.search = function(tag) {
       setTimeout(function() {
         LinkService.findTags({
@@ -85,16 +87,12 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
         }).then(tags => {
           $scope.tags = tags.slice(0, MAX_TAGS);
           // only show links having ALL the selected tags
-          if ($scope.searchMode.type === 'intersection') {
+          if ($scope.searchMode.type === searchModes.intersection) {
             return;
           }
-          // @todo: enable autocomplete if pattern is at least 2 characters?
           // show all links having the tag as a pattern (e.g. "red" works if the link has "redis" as tag)
           LinkService.findLinks({
-            intersect: false,
-            filters: _.isEmpty($scope.pattern) ? '' : tags.map(function(tag) {
-              return tag.name;
-            })
+            filters: _.isEmpty($scope.pattern) ? '' : getNames(tags)
           }).then(onLinksUpdate);
         });
       });
