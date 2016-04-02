@@ -49,7 +49,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
         return !_.find($scope.selectedTags, tag);
       });
       return LinkService.findLinksWithIntersect({
-        filters: getNames($scope.selectedTags)
+        tags: getNames($scope.selectedTags)
       }).then(onLinksUpdate);
     }
 
@@ -72,7 +72,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
       _.remove($scope.selectedTags, tag);
       $scope.tags.push(tag);
       LinkService.findLinksWithIntersect({
-        filters: getNames($scope.selectedTags)
+        tags: getNames($scope.selectedTags)
       }).then(onLinksUpdate);
     }
 
@@ -85,10 +85,10 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
     // when the user select a tag
     $scope.selectTag = function(tag) {
       if ($scope.searchMode.type === searchModes.intersection) {
-        return updateIntersection(tag);
+        return onIntersectionUpdate(tag);
       }
       LinkService.findLinks({
-        filters: [tag.name]
+        tags: [tag.name]
       }).then(onLinksUpdate);
     }
 
@@ -105,7 +105,7 @@ angular.module('Knowledge').controller('LinkController', ['$scope', 'LinkService
           }
           // show all links having the tag as a pattern (e.g. "red" works if the link has "redis" as tag)
           LinkService.findLinks({
-            filters: _.isEmpty($scope.pattern) ? '' : getNames(tags)
+            tags: _.isEmpty($scope.pattern) ? '' : getNames(tags)
           }).then(onLinksUpdate);
         });
       });

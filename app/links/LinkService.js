@@ -9,7 +9,7 @@ angular.module('Knowledge')
     }
 
     function formatLinksOptions(options) {
-      options.filters = (options.filters || []).join(',');
+      options.tags = (options.tags || []).join(',');
       return compact(options);
     }
 
